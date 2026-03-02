@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  face2mesh:
+    build: .
+    image: dankular/face2mesh:latest
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - ./input:/workspace/input
+      - ./output:/workspace/output
+      - model-cache:/root/.cache/face_models
+    command: --input /workspace/input/face.jpg --output /workspace/output --device cuda
+
+volumes:
+  model-cache:
