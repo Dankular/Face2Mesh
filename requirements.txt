@@ -1,0 +1,61 @@
+# Face to 3D - Modern Pipeline Requirements
+# Updated to use feed-forward 3D reconstruction (NOT Gaussian Splatting)
+
+# Core ML/DL
+torch>=2.0.0
+numpy>=1.24.0
+pillow>=10.0.0
+
+# Qwen-Image-Edit-2511 + Multi-Angles LoRA (Stage 1: Multiview)
+diffusers>=0.30.0
+transformers>=4.40.0
+accelerate>=0.30.0
+safetensors>=0.4.0
+huggingface-hub>=0.23.0
+
+# 3D Processing & Mesh Operations
+trimesh>=4.0.0
+open3d>=0.18.0
+plyfile>=1.0.0
+pymeshlab>=2022.2  # For advanced mesh processing
+
+# Modern 3D Reconstruction (Stage 2: Direct Mesh)
+# Choose ONE of the following (or install all for flexibility):
+
+# Option 1: TRELLIS (Microsoft) - RECOMMENDED
+# git+https://github.com/microsoft/TRELLIS.git
+
+# Option 2: Hunyuan3D-2 (Tencent) - Complete pipeline with PBR
+# git+https://github.com/Tencent/Hunyuan3D-2.git
+
+# Option 3: TripoSG (VAST-AI) - High-fidelity reconstruction
+# git+https://github.com/VAST-AI-Research/TripoSG.git
+
+# Body Extension (Stage 4: Optional)
+# smplx>=0.1.28  # For SMPL-X body model
+
+# Utilities
+tqdm>=4.66.0
+pyyaml>=6.0
+
+# ==============================================================================
+# IMPORTANT NOTES:
+# ==============================================================================
+# 
+# 1. DO NOT USE Gaussian Splatting (gsplat) for mesh generation
+#    - Gaussian Splatting is for RENDERING, not mesh creation
+#    - Inefficient conversion to meshes
+#    - Use modern feed-forward models instead (TRELLIS, Hunyuan3D-2, TripoSG)
+#
+# 2. Recommended Installation Order:
+#    a) Install core dependencies first (above)
+#    b) Choose ONE reconstruction model and install:
+#       pip install git+https://github.com/microsoft/TRELLIS.git
+#    c) Test multiview generation before full pipeline
+#
+# 3. For Production:
+#    - TRELLIS: Best balance of speed/quality
+#    - Hunyuan3D-2: Best for game assets (includes PBR)
+#    - TripoSG: Best quality for single images
+#
+# ==============================================================================
