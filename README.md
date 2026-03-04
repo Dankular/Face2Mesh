@@ -221,3 +221,28 @@ pip install git+https://github.com/graphdeco-inria/diff-gaussian-rasterization
 ├── mvdiffusion/              — Multi-view diffusion module
 └── gslrm/                    — Gaussian Splatting LRM module
 ```
+
+---
+
+## Known Issues & Lessons Learned
+
+Problems hit across development sessions. Documented so they are not repeated on fresh setup.
+
+| # | Problem | Fix / Note |
+|---|---------|------------|
+| 1 | **PyTorch version conflicts** | Pin exact torch+cuda combo. On Vast.ai, match the instance CUDA version. |
+| 2 | **BitsAndBytes / CUDA incompatibility** | Removed entirely. Qwen now runs as GGUF Q4_0 via `llama-cpp-python`. |
+| 3 | **CUDA extension compile failures** | `diff-gaussian-rasterization` compiles at install time. CUDA toolkit must match PyTorch CUDA build exactly. |
+| 4 | **FLAME model behind registration wall** | Must manually register at https://flame.is.tue.mpg.de/ and place `generic_model.pkl` at `~/.cache/face_models/flame/`. Stages 4 & 5 fall back to xatlas silently without it. |
+| 5 | **Gaussian Splatting misused for mesh** | gsplat is a rendering format, not a mesh source. Mesh must come from TSDF/Marching Cubes. |
+| 6 | **VRAM too low for NF4 Qwen** | Switched to GGUF Q4_0 — runs on 8 GB VRAM. No BitsAndBytes needed. |
+| 7 | **3D backbone undecided** | TRELLIS / Hunyuan3D-2 / TripoSG are all in requirements. Pick one and commit before next session. |
+| 8 | **HuggingFace downloads timeout mid-run** | Pre-download all models to cache before running pipeline. |
+| 9 | **77 GB Docker image impractical** | Use setup scripts + volume mounts instead of baking models into image. |
+| 10 | **README and code stage numbers drifted** | Keep README and `pipeline_complete.py` stage numbers in sync at every commit. |
+| 11 | **SSH heredoc + backtick expansion** | Backticks in plink heredocs get shell-expanded. Write scripts to a local file, upload with pscp, then run. |
+| 12 | **Git HTTPS push needs token** | Inject token into remote URL: `git remote set-url origin https://<token>@github.com/...` |
+| 13 | **xformers version pinning** | Must exactly match PyTorch build or silently falls back to slow attention. |
+| 14 | **Open3D not available on Python 3.12+** | **Use Python 3.11.** Open3D has no 3.12/3.14 wheel. TSDF fusion breaks silently. |
+| 15 | **Vast.ai instance ephemerality** | All installs lost on stop. Keep a setup script that restores env + re-downloads models from persistent volume. |
+| 16 | **Test/duplicate files accumulate** | No `test_*.py`, `*_new.py`, `output_*/`, or `__pycache__` in commits. Covered by .gitignore. |
