@@ -140,7 +140,8 @@ Converts `gaussians.ply` to a watertight triangle mesh:
 
 ## Stage 7 — Qwen Multi-Angles (Texture Enhancement)
 
-**Model:** `Qwen/Qwen-Image-Edit-2511` + `fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA`
+**Model:** `unsloth/Qwen-Image-Edit-2511-GGUF` — `qwen-image-edit-2511-Q4_0.gguf`
+**HuggingFace:** https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF
 
 ### What it does
 
@@ -166,7 +167,7 @@ However, once the mesh geometry is fixed, painting UV texture patches is a per-r
 
 ### VRAM Notes
 
-Loaded in **4-bit NF4** quantization (BitsAndBytes) with `device_map="auto"` for automatic CPU offloading. Fits in 12 GB VRAM.
+Loaded as **GGUF Q4_0** via `llama-cpp-python`. Runs on **consumer GPUs with as little as 8 GB VRAM** — no BitsAndBytes/CUDA issues. Model file `qwen-image-edit-2511-Q4_0.gguf` from [unsloth/Qwen-Image-Edit-2511-GGUF](https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF).
 
 ---
 
