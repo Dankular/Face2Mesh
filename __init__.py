@@ -102,10 +102,20 @@ class FaceTo3DPipeline:
         try:
             # Load base Qwen model
             logger.info("Loading base Qwen-Image-Edit-2511 model...")
+            from transformers import BitsAndBytesConfig
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.float16,
+                bnb_4bit_use_double_quant=True,
+            )
             self._qwen_pipe = StableDiffusionPipeline.from_pretrained(
                 "Qwen/Qwen-Image-Edit-2511",
-                torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
-            ).to(self.device)
+                torch_dtype=torch.float16,
+                quantization_config=bnb_config,
+                device_map="auto",
+                low_cpu_mem_usage=True,
+            )
             
             # Load Multi-Angles LoRA
             logger.info("Loading Multi-Angles LoRA adapter...")
